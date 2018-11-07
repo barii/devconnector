@@ -1,10 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyPerser = require('body-parser');
+const passport = require('passport');
+
 const users = require('./routes/users');
 const profile = require('./routes/profile');
 const posts = require('./routes/posts');
 
 const app = express();
+
+app.use(bodyPerser.urlencoded({extended: false}));
+app.use(bodyPerser.json());
 
 const db = require('./config/keys').mongoURI;
 
@@ -16,6 +22,9 @@ mongoose
 app.get('/', (req, res) => {
   res.send("hello world");
 });
+
+app.use(passport.initialize());
+require('./config/passport')(passport);
 
 app.use('/api/users', users);
 app.use('/api/profile', profile);
